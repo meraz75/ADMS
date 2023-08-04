@@ -1,0 +1,56 @@
+Advanced Database Management System
+Lab Quiz
+(Any 8 from 1-10)
+NAME:MD.Meraz Hossain
+ID:20-42460-1
+
+1. Find out the details including grade and dname of all clerk.
+
+select e.*, s.grade, d.dname from emp e, dept d, salgrade s where e.deptno=d.deptno and e.sal between losal and hisal and e.job='CLERK';
+
+2. Find out the details with grade of the second maximum salary holder.
+
+select e.*,s.grade from emp e join salgrade s on e.sal between s.losal and s.hisal where e.sal = (select max(sal) from emp where sal<(select max(sal) from emp));
+
+3. Find the grade 2 mgr who belong from dep 10 or 20.
+
+select e.*, s.grade, d.dname from emp e, dept d, salgrade s where e.deptno=d.deptno and e.sal between losal and hisal and e.deptno in (10,20) and s.grade=2 and e.empno in (select mgr from emp);
+
+4. Find the highest paid Analyst of the Finance department who belong from the grade 2 and 3.
+
+select * from emp where sal in (select max(e.sal) from emp e, dept d, salgrade s where e.deptno=d.deptno and e.sal between losal and hisal and e.job='ANALYST' and d.dname='FINANCE' and s.grade in (2,3));
+
+5. Find out the dname with the most senior employee.
+
+SELECT d.dname FROM dept d JOIN emp e ON d.deptno = e.deptno WHERE e.hiredate = (SELECT MIN(hiredate) FROM emp);
+
+6. List out the Name, Job, Salary, grade of the emps in the department with the highest no of employees.
+
+select e.deptno, e.ename, e.job, e.sal, s.grade from emp e, salgrade s where e.sal between s.losal and s.hisal and e.deptno in ( select deptno from emp group by deptno having count(*) in ( select max(count(*)) from emp group by deptno));
+
+7. Find out the grade with maximum number of salesman.
+
+SELECT s.GRADE, COUNT(*) AS NUM_OF_SALESMAN
+FROM EMP e
+JOIN SALGRADE s ON e.SAL BETWEEN s.LOSAL AND s.HISAL WHERE e.JOB = 'SALESMAN'GROUP BY s.GRADE ORDER BY NUM_OF_SALESMAN DESC
+
+8. List all the Grade2 and Grade 3 salesman who belong from the Chicago and Dallas.
+
+select e.*, s.grade, d.loc from emp e, dept d, salgrade s where e.deptno=d.deptno and e.sal between s.losal and s.hisal and e.job='SALESMAN' and s.grade in (2,3) and d.loc in ('CHICAGO', 'DALLAS');
+
+9. Find out the grade of all mgrs.
+
+SELECT DISTINCT s.grade FROM emp e JOIN salgrade s ON e.sal BETWEEN s.losal AND s.hisal WHERE e.job = 'MANAGER';
+
+10. Find out the details of the grade 2 mgrs Who manage the maximum no of employee.
+
+BONUS
+11.  Find out the details of the SALESMAN whose location is same as Miller and grad is same like CLARK. (Without using subquery)
+
+SELECT e1.*, d1.dname, d1.loc, e1.sal AS grade
+FROM emp e1
+JOIN dept d1 ON e1.deptno = d1.deptno JOIN emp e2 ON e2.job = 'SALESMAN' AND e2.deptno = d1.deptno JOIN dept d2 ON e2.deptno = d2.deptno WHERE e1.ename = 'MILLER' AND e2.sal = e1.sal AND d2.loc = d1.loc
+
+
+
+
